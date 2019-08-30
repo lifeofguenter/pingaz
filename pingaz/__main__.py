@@ -7,8 +7,8 @@ import logging
 import boto3
 import click
 
-import cloudwatcher
-import pinger
+from pingaz import cloudwatcher
+from pingaz import pinger
 
 
 boto3.set_stream_logger('', logging.INFO)
