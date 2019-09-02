@@ -16,7 +16,7 @@ def put(results):
         dimensions = [
             {
                 'Name': 'Host',
-                'Value': host,
+                'Value': result['name'],
             },
             {
                 'Name': 'SourceAZ',
@@ -47,7 +47,7 @@ def put(results):
             },
         ]
 
-    cloudwatch = boto3.client('cloudwatch')
+    cloudwatch = boto3.client('cloudwatch', region_name=ec2_metadata.region)
     cloudwatch.put_metric_data(
         Namespace='Tidal/PingAZ',
         MetricData=metrics,

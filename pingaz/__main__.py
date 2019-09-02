@@ -7,6 +7,7 @@ import logging
 import boto3
 import click
 
+from pingaz import asghosts
 from pingaz import cloudwatcher
 from pingaz import pinger
 
@@ -30,7 +31,13 @@ def target(hosts):
 
 @cli.command()
 def asg():
-    print('nada')
+    '''check latency within same asg'''
+
+    hosts = asghosts.find()
+    print(hosts)
+    results = pinger.ping(hosts)
+    print(results)
+    #cloudwatcher.put(results)
 
 
 if __name__ == '__main__':
