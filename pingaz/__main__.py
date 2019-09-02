@@ -34,10 +34,8 @@ def asg():
     '''check latency within same asg'''
 
     hosts = asghosts.find()
-    print(hosts)
     results = pinger.ping(hosts)
-    print(results)
-    #cloudwatcher.put(results)
+    cloudwatcher.put(results)
 
 
 if __name__ == '__main__':
