@@ -1,6 +1,7 @@
 import datetime
 
 import boto3
+from ec2_metadata import ec2_metadata
 
 
 def put(results):
@@ -12,15 +13,25 @@ def put(results):
         if not result:
             continue
 
+        dimensions = [
+            {
+                'Name': 'Host',
+                'Value': host,
+            },
+            {
+                'Name': 'SourceAZ',
+                'Value': ec2_metadata.availability_zone,
+            },
+            {
+                'Name': 'SourceInstanceId',
+                'Value': ec2_metadata.instance_id,
+            },
+        ]
+
         metrics += [
             {
                 'MetricName': 'latency',
-                'Dimensions': [
-                    {
-                        'Name': 'Host',
-                        'Value': host,
-                    },
-                ],
+                'Dimensions': dimensions,
                 'Timestamp': timestamp,
                 'Value': result['latency'],
                 'Unit': 'Milliseconds',
@@ -28,12 +39,7 @@ def put(results):
             },
             {
                 'MetricName': 'loss',
-                'Dimensions': [
-                    {
-                        'Name': 'Host',
-                        'Value': host,
-                    },
-                ],
+                'Dimensions': dimensions,
                 'Timestamp': timestamp,
                 'Value': result['loss'],
                 'Unit': 'Percent',
