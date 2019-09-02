@@ -17,29 +17,41 @@ def ping(hosts):
     ]
 
     procs = []
-    for host in hosts:
-        procs.append(subprocess.Popen(
-            base_command + [host],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        ))
+    for h in hosts:
+        if type(h) == 'dict':
+            name = h['name']
+            host = h['host']
+        else:
+            name = host = h
+
+        procs += [
+            {
+                'name': name,
+                'host': host,
+                'proc': subprocess.Popen(
+                    base_command + [host],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                ),
+            },
+        ]
 
     results = {}
-    for i, p in enumerate(procs):
-        out, err = p.communicate(timeout=30)
-        if p.returncode > 0:
-            results[hosts[i]] = False
+    for p in procs:
+        out, err = p['proc'].communicate(timeout=30)
+        if p['proc'].returncode > 0:
+            results[p['host']] = False
             continue
 
         matches = re.findall(
-            r'^{host}\s*:\s*\[(\d+)\], (?:\d+) bytes, ([\d.]+) ms \((?:[\d.]+) avg, (\d+)% loss\)$'.format(host=re.escape(hosts[i])),
+            r'^{host}\s*:\s*\[(\d+)\], (?:\d+) bytes, ([\d.]+) ms \((?:[\d.]+) avg, (\d+)% loss\)$'.format(host=re.escape(p['host'])),
             out.decode(),
             re.IGNORECASE|re.MULTILINE
         )
 
         total_matches = len(matches)
         if total_matches == 0:
-            results[hosts[i]] = False
+            results[p['host']] = False
             continue
 
         total_loss = 0
@@ -50,8 +62,9 @@ def ping(hosts):
             total_latency += float(match[1])
             total_loss += int(match[2])
 
-        results[hosts[i]] = {
-            'host': hosts[i],
+        results[p['host']] = {
+            'host': p['host'],
+            'name': p['name'],
             'latency': round(total_latency / (total_matches - 1), 2),
             'loss': round(total_loss / (total_matches - 1), 2),
         }
