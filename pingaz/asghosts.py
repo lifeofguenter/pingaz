@@ -23,7 +23,11 @@ def find():
         Filters=[
             {
                 'Name': 'tag:aws:autoscaling:groupName',
-                'Values': [get_autoscaling_group_name(client)]
+                'Values': [get_autoscaling_group_name(client)],
+            },
+            {
+                'Name': 'instance-state-name',
+                'Values': ['running'],
             },
         ],
     )
