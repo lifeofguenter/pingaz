@@ -18,7 +18,7 @@ def ping(hosts):
 
     procs = []
     for h in hosts:
-        if type(h) == 'dict':
+        if type(h) == dict:
             name = h['name']
             host = h['host']
         else:

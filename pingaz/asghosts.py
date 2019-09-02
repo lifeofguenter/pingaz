@@ -29,14 +29,15 @@ def find():
     )
 
     hosts = []
-    for instance in response['Reservations'][0]['Instances']:
-        # skip self
-        if instance['InstanceId'] == ec2_metadata.instance_id:
-            continue
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            # skip self
+            if instance['InstanceId'] == ec2_metadata.instance_id:
+                continue
 
-        hosts += [{
-            'name': instance['Placement']['AvailabilityZone'],
-            'host': instance['NetworkInterfaces'][0]['PrivateIpAddress']
-        }]
+            hosts += [{
+                'name': instance['Placement']['AvailabilityZone'],
+                'host': instance['NetworkInterfaces'][0]['PrivateIpAddress']
+            }]
 
     return hosts
