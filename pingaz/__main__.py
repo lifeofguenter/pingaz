@@ -1,6 +1,6 @@
-'''
+"""
 PingAZ
-'''
+"""
 
 import logging
 
@@ -23,7 +23,7 @@ def cli():
 @cli.command()
 @click.argument('hosts', nargs=-1)
 def target(hosts):
-    '''check latency of given hosts'''
+    """check latency of given hosts"""
 
     results = pinger.ping(hosts)
     cloudwatcher.put(results)
@@ -31,7 +31,7 @@ def target(hosts):
 
 @cli.command()
 def asg():
-    '''check latency within same asg'''
+    """check latency within same asg"""
 
     hosts = asghosts.find()
     results = pinger.ping(hosts)
