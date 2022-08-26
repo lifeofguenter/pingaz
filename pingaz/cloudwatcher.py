@@ -47,8 +47,9 @@ def put(results):
             },
         ]
 
-    cloudwatch = boto3.client('cloudwatch', region_name=ec2_metadata.region)
-    cloudwatch.put_metric_data(
-        Namespace='Tidal/PingAZ',
-        MetricData=metrics,
-    )
+    if len(metrics) > 0:
+        cloudwatch = boto3.client('cloudwatch', region_name=ec2_metadata.region)
+        cloudwatch.put_metric_data(
+            Namespace='Tidal/PingAZ',
+            MetricData=metrics,
+        )

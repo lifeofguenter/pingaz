@@ -39,7 +39,7 @@ def ping(hosts):
     results = {}
     for p in procs:
         out, err = p['proc'].communicate(timeout=30)
-        if p['proc'].returncode > 0:
+        if p['proc'].returncode > 1:
             results[p['host']] = False
             continue
 
@@ -50,23 +50,27 @@ def ping(hosts):
         )
 
         total_matches = len(matches)
-        if total_matches == 0:
-            results[p['host']] = False
-            continue
 
         total_loss = 0
         total_latency = 0
 
-        # skip the first which might by dirty
-        for match in matches[1:]:
-            total_latency += float(match[1])
-            total_loss += int(match[2])
+        if total_matches > 0:
+            # skip the first which might by dirty
+            for match in matches[1:]:
+                total_latency += float(match[1])
+                total_loss += int(match[2])
+            latency = round(total_latency / (total_matches - 1), 2)
+            loss = round(total_loss / (total_matches - 1), 2)
+        else:
+            # assume we had 100% packet loss
+            latency = 0
+            loss = 100
 
         results[p['host']] = {
             'host': p['host'],
             'name': p['name'],
-            'latency': round(total_latency / (total_matches - 1), 2),
-            'loss': round(total_loss / (total_matches - 1), 2),
+            'latency': latency,
+            'loss': loss,
         }
 
     return results
