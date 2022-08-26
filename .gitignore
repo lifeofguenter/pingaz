@@ -1,5 +1,8 @@
+.DS_Store
+/.idea/
 /.vscode/
 /.venv/
+/.env
 
 /build/
 /dist/

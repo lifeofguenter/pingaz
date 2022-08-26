@@ -5,9 +5,9 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='pingaz',
-    version='0.0.7',
-    author='Gunter Grodotzki',
-    author_email='gunter@grodotzki.co.za',
+    version='0.1.0',
+    author='Günter Grodotzki',
+    author_email='gunter@grodotzki.com',
     description='Monitor latency between AZs with fping and cloudwatch.',
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -1,13 +1,13 @@
-'''
+"""
 fping wrapper
-'''
+"""
 
 import re
 import subprocess
 
 
 def ping(hosts):
-    '''fetch latency on target'''
+    """fetch latency on target"""
 
     base_command = [
         'fping',

@@ -1,6 +1,7 @@
 import boto3
 from ec2_metadata import ec2_metadata
 
+
 def get_autoscaling_group_name(client):
     response = client.describe_tags(
         Filters=[
